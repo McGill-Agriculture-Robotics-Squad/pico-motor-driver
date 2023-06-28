@@ -28,7 +28,7 @@ class Motor {
         //set speed [0-100%]
         void set_speed(uint percentage) {
             pwm_set_chan_level(pwm_gpio_to_slice_num(pwm_pin),
-            pwm_gpio_to_channel(gpio),
+            pwm_gpio_to_channel(pwm_pin),
             percentage*top/100
             );
         }
@@ -47,9 +47,7 @@ class Motor {
             } else if (operation=="stop"){
                 gpio_put(dir_pin1, false);
                 gpio_put(dir_pin2, false);
-            } else {
-                break;
-            }
+            } else {}
         }
 
     private:

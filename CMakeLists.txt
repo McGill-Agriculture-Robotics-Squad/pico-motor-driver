@@ -22,7 +22,6 @@ add_executable(motor_control motor_control.cpp)
 target_link_libraries(motor_control 
     pico_stdlib 
     hardware_pwm
-    string
 )
 
 # create map/bin/hex/uf2 file etc.
