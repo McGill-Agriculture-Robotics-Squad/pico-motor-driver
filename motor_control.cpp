@@ -1,5 +1,5 @@
 #include "pico/stdlib.h"
-#include "hardware.pwm.h"
+#include "hardware/pwm.h"
 #include <string>
 using namespace std;
 
