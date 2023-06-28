@@ -47,7 +47,9 @@ class Motor {
             } else if (operation=="stop"){
                 gpio_put(dir_pin1, false);
                 gpio_put(dir_pin2, false);
-            } else {break;}
+            } else {
+                break;
+            }
         }
 
     private:
