@@ -35,31 +35,19 @@ class Motor {
 
         void set_direction(string operation){
 
-            switch (operation){
-                case "ccw":
-                    gpio_put(dir_pin1, false);
-                    gpio_put(dir_pin2, true);
-                    break;
-                
-                case "cw":
-                    gpio_put(dir_pin1, true);
-                    gpio_put(dir_pin2, false);
-                    break;
-                
-                case "short_brake":
-                    gpio_put(dir_pin1, true);
-                    gpio_put(dir_pin2, true);
-                    break;
-
-                case "stop":
-                    gpio_put(dir_pin1, false);
-                    gpio_put(dir_pin2, false);
-                    break;
-                
-                default:
-                    break;
-            }
-
+            if (operation=="ccw"){
+                gpio_put(dir_pin1, false);
+                gpio_put(dir_pin2, true);
+            } else if (operation=="cw"){
+                gpio_put(dir_pin1, true);
+                gpio_put(dir_pin2, false);
+            } else if (operation=="short_brake"){
+                gpio_put(dir_pin1, true);
+                gpio_put(dir_pin2, true);
+            } else if (operation=="stop"){
+                gpio_put(dir_pin1, false);
+                gpio_put(dir_pin2, false);
+            } else {break;}
         }
 
     private:
