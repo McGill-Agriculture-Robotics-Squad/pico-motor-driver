@@ -60,33 +60,35 @@ int main(){
 
     Motor test_motor(0,1,2,6);
 
-    test_motor.set_direction("cw");
-    test_motor.set_speed(50);
-    
-    sleep_ms(5000);
+    while (true){
+        test_motor.set_direction("cw");
+        test_motor.set_speed(50);
+        
+        sleep_ms(5000);
 
-    test_motor.set_direction("short_brake");
-    test_motor.set_speed(10);
+        test_motor.set_direction("short_brake");
+        test_motor.set_speed(10);
 
-    sleep_ms(5000);
+        sleep_ms(5000);
 
-    test_motor.set_direction("ccw");
-    test_motor.set_speed(10);
+        test_motor.set_direction("ccw");
+        test_motor.set_speed(30);
 
-    sleep_ms(5000);
+        sleep_ms(5000);
 
-    test_motor.set_direction("stop");
-    test_motor.set_speed(85);
+        test_motor.set_direction("stop");
+        test_motor.set_speed(85);
 
-    sleep_ms(5000);
+        sleep_ms(5000);
 
-    test_motor.set_direction("cw");
-    test_motor.set_speed(85);
+        test_motor.set_direction("cw");
+        test_motor.set_speed(85);
 
-    sleep_ms(5000);
+        sleep_ms(5000);
 
-    test_motor.set_direction("ccw");
-    test_motor.set_speed(0);
+        test_motor.set_direction("ccw");
+        test_motor.set_speed(0);
 
-    sleep_ms(5000);
+        sleep_ms(5000);
+    }
 };
