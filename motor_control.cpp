@@ -21,7 +21,9 @@ class TB6612FNG_MD {
             gpio_set_dir(bi2_pin, GPIO_OUT);
             gpio_set_dir(stby_pin, GPIO_OUT);
             
-            gpio_put(stby_pin, true);
+            // gpio_put(stby_pin, true);
+
+            set_standby_mode(false);
 
 
             // Setup PWM
@@ -65,14 +67,23 @@ class TB6612FNG_MD {
             } else {}
         }
 
+        void set_standby_mode(bool active=false){
+            stby_state = active;
+            gpio_put(stby_pin, !stby_state);
+        }
+
+        bool get_standby_state(){
+            return stby_state;
+        }
+
     private:
         uint pwma_pin, ai2_pin, ai1_pin, stby_pin, bi1_pin, bi2_pin, pwmb_pin;
         uint top=255; // 8-bit resolution
+        bool stby_state;
 
 };
 
 int main(){
-
     /* Setup motors
     Motors: 
     Front Left(motors_left==true) 
