@@ -25,7 +25,6 @@ class TB6612FNG_MD {
 
             set_standby_mode(false);
 
-
             // Setup PWM
             gpio_set_function(pwma_pin, GPIO_FUNC_PWM);
             gpio_set_function(pwmb_pin, GPIO_FUNC_PWM);
