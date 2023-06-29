@@ -82,6 +82,17 @@ class TB6612FNG_MD {
 
 };
 
+class Robot{
+    public:
+        Robot(TB6612FNG_MD left_MD, TB6612FNG_MD right_MD) : {
+
+        }
+    
+    private:
+    
+
+};
+
 int main(){
     /* Setup motors
     Motors: 
