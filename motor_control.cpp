@@ -82,13 +82,21 @@ class TB6612FNG_MD {
 
 };
 
-class Robot{
+class Rover{
     public:
-        Robot(TB6612FNG_MD left_MD, TB6612FNG_MD right_MD) : {
+        Rover(string name="Rover1", TB6612FNG_MD left_MD, TB6612FNG_MD right_MD) : 
+        left_motors(left_MD), right_motors(right_MD), name(name) {
+        
+        }
+
+        void set_motion_direction(string ){
 
         }
     
     private:
+
+    TB6612FNG_MD left_motors, right_motors;
+    string name;
     
 
 };
