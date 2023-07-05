@@ -1,7 +1,28 @@
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
+#include <stdio.h>
 #include <string>
+#include <sstream>
+#include <vector>
+#include <tuple>
+
+
+
 using namespace std;
+
+#define MAX_LINE_LENGTH 256
+
+
+vector<string> split_string(const string& str, char delimiter) {
+    vector<string> tokens;
+    string token; 
+    istringstream tokenStream(str);
+    while (getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
 
 class TB6612FNG_MD {
     public:
@@ -162,6 +183,13 @@ class Rover{
                 right_motors.motor_driver.set_direction(right_motors.forward, right_motors.front);
                 right_motors.motor_driver.set_direction(right_motors.forward, right_motors.back);
 
+            } else if(direction == "stop"){
+                
+                left_motors.motor_driver.set_direction("stop", left_motors.front);
+                left_motors.motor_driver.set_direction("stop", left_motors.back);
+                right_motors.motor_driver.set_direction("stop", right_motors.front);
+                right_motors.motor_driver.set_direction("stop", right_motors.back);
+
             }
 
         }
@@ -173,6 +201,15 @@ class Rover{
             right_motors.motor_driver.set_speed(speed_percentage, right_motors.front);
             right_motors.motor_driver.set_speed(speed_percentage, right_motors.back);
 
+        }
+
+        // format of string -->"direction:string;speed:int"
+        tuple<string,int> parse_string_command(string command_string){
+            
+            vector<string> control_commands = split_string(command_string, ';');
+            string direction = split_string(control_commands[0], ':')[1];
+            uint speed = stoi(split_string(control_commands[1], ':')[1]);
+            return make_tuple(direction, speed);
         }        
 
         // }
@@ -182,12 +219,8 @@ class Rover{
         // }
     
     private:
-    // TB6612FNG_MD left_motors, right_motors;
     motors left_motors, right_motors;
     string name, status;
-    // const bool left_front, left_back, right_front, right_back;
-    // const string left_forward = "ccw", left_backword = "cw";
-    // const string right_forward = "cw"; right_backword = "ccw";
 
 };
 
@@ -199,103 +232,28 @@ int main(){
     Front Right(motores_right==true) 
     Back Right(motores_right==false)
     */
-    TB6612FNG_MD right_md(0,1,2,6,5,4,3);
-    TB6612FNG_MD left_md(20,21,22,19,26,27,28);
+   stdio_init_all();
+   char line[MAX_LINE_LENGTH];
+   TB6612FNG_MD right_md(0,1,2,6,5,4,3);
+   TB6612FNG_MD left_md(20,21,22,19,26,27,28);
 
-    Rover robot(left_md, right_md, "test_robot");
+   Rover robot(left_md, right_md, "test_robot");
 
+   //main loop 
+   while (true){
+    
+    if (fgets(line, MAX_LINE_LENGTH, stdin)) {
+        
+        printf("Received: %s", line);
+        string line_str(line);
 
+        auto [direction,speed]= robot.parse_string_command(line_str);
 
-    while (true){
+        printf("direction set to:  %s, speed set to: %u\n", direction.c_str(), speed);
 
-        robot.set_motion_direction("forward");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-        robot.set_motion_direction("backward");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-        robot.set_motion_direction("left");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-        robot.set_motion_direction("right");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-        robot.set_motion_direction("rotate_right");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-        robot.set_motion_direction("rotate_left");
-        robot.set_speed_all(50);
-        sleep_ms(3000);
-
-
-
-        // motors_left.set_direction("cw", true);
-        // motors_left.set_direction("cw", false);
-        // motors_right.set_direction("cw", true);
-        // motors_right.set_direction("cw", false);
-
-        // motors_left.set_speed(50,true);
-        // motors_left.set_speed(50,false);
-        // motors_right.set_speed(50,true);
-        // motors_right.set_speed(50,false);
-
-
-        // sleep_ms(5000);
-
-        // motors_left.set_direction("short_brake", true);
-        // motors_left.set_direction("short_brake", false);
-        // motors_right.set_direction("short_brake", true);
-        // motors_right.set_direction("short_brake", false);
-
-        // sleep_ms(5000);
-
-        // motors_left.set_direction("ccw", true);
-        // motors_left.set_direction("ccw", false);
-        // motors_right.set_direction("ccw", true);
-        // motors_right.set_direction("ccw", false);
-
-        // motors_left.set_speed(40, true);
-        // motors_left.set_speed(40, false);
-        // motors_right.set_speed(40, true);
-        // motors_right.set_speed(40, false);
-
-
-        // sleep_ms(5000);
-
-        // motors_left.set_direction("stop", true);
-        // motors_left.set_direction("stop", false);
-        // motors_right.set_direction("stop", true);
-        // motors_right.set_direction("stop", false);
-
-        // sleep_ms(5000);
-
-        // motors_left.set_direction("ccw", true);
-        // motors_left.set_direction("ccw", false);
-        // motors_right.set_direction("ccw", true);
-        // motors_right.set_direction("ccw", false);
-
-        // motors_left.set_speed(100, true);
-        // motors_left.set_speed(100, false);
-        // motors_right.set_speed(100, true);
-        // motors_right.set_speed(100, false);
-
-        // sleep_ms(5000);
-
-        // motors_left.set_direction("cw", true);
-        // motors_left.set_direction("cw", false);
-        // motors_right.set_direction("cw", true);
-        // motors_right.set_direction("cw", false);
-
-        // motors_left.set_speed(100,true);
-        // motors_left.set_speed(100,false);
-        // motors_right.set_speed(100,true);
-        // motors_right.set_speed(100,false);
-
-        // sleep_ms(5000);
+        robot.set_motion_direction(direction);
+        robot.set_speed_all(speed);
+        }
+    
     }
 };

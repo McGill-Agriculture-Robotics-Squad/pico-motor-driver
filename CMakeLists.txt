@@ -24,5 +24,9 @@ target_link_libraries(motor_control
     hardware_pwm
 )
 
+# enable usb output, disable uart output
+pico_enable_stdio_usb(motor_control 1)
+pico_enable_stdio_uart(motor_control 0)
+
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(motor_control)
