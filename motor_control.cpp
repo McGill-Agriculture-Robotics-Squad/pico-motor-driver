@@ -134,7 +134,35 @@ class Rover{
                 right_motors.motor_driver.set_direction(right_motors.backward, right_motors.back);
             
 
-            } else{}
+            } else if(direction == "left"){
+
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.back);
+
+            } else if(direction == "right"){
+                
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.back);
+
+            } else if(direction == "rotate_right"){
+                
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.back);
+
+            } else if(direction == "rotate_left"){
+                
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.back);
+
+            }
 
         }
             
@@ -182,11 +210,27 @@ int main(){
 
         robot.set_motion_direction("forward");
         robot.set_speed_all(50);
-        sleep_ms(5000);
+        sleep_ms(3000);
 
         robot.set_motion_direction("backward");
         robot.set_speed_all(50);
-        sleep_ms(5000);
+        sleep_ms(3000);
+
+        robot.set_motion_direction("left");
+        robot.set_speed_all(50);
+        sleep_ms(3000);
+
+        robot.set_motion_direction("right");
+        robot.set_speed_all(50);
+        sleep_ms(3000);
+
+        robot.set_motion_direction("rotate_right");
+        robot.set_speed_all(50);
+        sleep_ms(3000);
+
+        robot.set_motion_direction("rotate_left");
+        robot.set_speed_all(50);
+        sleep_ms(3000);
 
 
 
