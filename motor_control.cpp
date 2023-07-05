@@ -3,14 +3,6 @@
 #include <string>
 using namespace std;
 
-struct motors{
-    TB6612FNG_MD motor_driver;
-    string forward;
-    string backward;
-    bool front;
-    bool back;
-    }; 
-
 class TB6612FNG_MD {
     public:
         TB6612FNG_MD(uint PWMA_pin=0, uint AI2_pin=1, uint AI1_pin=2, uint STBY_pin=6, uint BI1_pin =5, uint BI2_pin=4, uint PWMB_pin=3) 
@@ -90,12 +82,35 @@ class TB6612FNG_MD {
 
 };
 
+
+struct motors{
+    TB6612FNG_MD motor_driver;
+    string forward;
+    string backward;
+    bool front;
+    bool back;
+    };
+
+bool DEFAULT_MOTOR_CONFIG[4] = {true,false,false,true};
+
 // in the normal congifuration  Left motor front is a0[true] (b0[false] is back), right motor front is b0[false] (a0[true] is back)
 class Rover{
     public:
-        Rover(TB6612FNG_MD left_MD, TB6612FNG_MD right_MD, string name="Rover1", bool motor_config[4] = {true,false,false,true}) : 
-        left_motors.motor_driver(left_MD), right_motors.motor_driver(right_MD), name(name), 
-        left_motors.front(motor_config[0]), left_motors.back(motor_config[1]), right_motors.front(motor_config[2]), right_motors.back(motor_config[3]) {
+        Rover(TB6612FNG_MD left_MD, TB6612FNG_MD right_MD, string name="Rover1", bool motor_config[4] = DEFAULT_MOTOR_CONFIG) : 
+        name(name){
+
+                
+                left_motors.motor_driver = left_MD;
+                left_motors.front = motor_config[0];
+                left_motors.back = motor_config[1];
+                left_motors.forward = "ccw";
+                left_motors.backward = "cw";
+                                
+                right_motors.motor_driver = right_MD;
+                right_motors.front = motor_config[2];
+                right_motors.back = motor_config[3];
+                right_motors.forward = "cw";
+                right_motors.backward = "ccw";
 
             set_motion_direction("forward");
         
@@ -120,13 +135,15 @@ class Rover{
             
 
             } else{}
-            
-        void set_speed_all(uint speed = 50){
 
-            left_motors.motor_driver.set_speed(speed, left_motors.front);
-            left_motors.motor_driver.set_speed(speed, left_motors.back);
-            right_motors.motor_driver.set_speed(speed, right_motors.front);
-            right_motors.motor_driver.set_speed(speed, right_motors.back);
+        }
+            
+        void set_speed_all(uint speed_percentage = 50){
+
+            left_motors.motor_driver.set_speed(speed_percentage, left_motors.front);
+            left_motors.motor_driver.set_speed(speed_percentage, left_motors.back);
+            right_motors.motor_driver.set_speed(speed_percentage, right_motors.front);
+            right_motors.motor_driver.set_speed(speed_percentage, right_motors.back);
 
         }        
 
@@ -139,11 +156,6 @@ class Rover{
     private:
     // TB6612FNG_MD left_motors, right_motors;
     motors left_motors, right_motors;
-    left_motors.forward = "ccw";
-    left_motors.backward = "cw";
-    right_motors.forward = "cw";
-    right_motors.backward = "ccw";
-
     string name, status;
     // const bool left_front, left_back, right_front, right_back;
     // const string left_forward = "ccw", left_backword = "cw";
@@ -169,11 +181,11 @@ int main(){
     while (true){
 
         robot.set_motion_direction("forward");
-        robot.set_speed(50);
+        robot.set_speed_all(50);
         sleep_ms(5000);
 
         robot.set_motion_direction("backward");
-        robot.set_speed(50);
+        robot.set_speed_all(50);
         sleep_ms(5000);
 
 
