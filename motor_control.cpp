@@ -3,6 +3,14 @@
 #include <string>
 using namespace std;
 
+struct motors{
+    TB6612FNG_MD motor_driver;
+    string forward;
+    string backward;
+    bool front;
+    bool back;
+    }; 
+
 class TB6612FNG_MD {
     public:
         TB6612FNG_MD(uint PWMA_pin=0, uint AI2_pin=1, uint AI1_pin=2, uint STBY_pin=6, uint BI1_pin =5, uint BI2_pin=4, uint PWMB_pin=3) 
@@ -82,22 +90,64 @@ class TB6612FNG_MD {
 
 };
 
+// in the normal congifuration  Left motor front is a0[true] (b0[false] is back), right motor front is b0[false] (a0[true] is back)
 class Rover{
     public:
-        Rover(string name="Rover1", TB6612FNG_MD left_MD, TB6612FNG_MD right_MD) : 
-        left_motors(left_MD), right_motors(right_MD), name(name) {
+        Rover(TB6612FNG_MD left_MD, TB6612FNG_MD right_MD, string name="Rover1", bool motor_config[4] = {true,false,false,true}) : 
+        left_motors.motor_driver(left_MD), right_motors.motor_driver(right_MD), name(name), 
+        left_motors.front(motor_config[0]), left_motors.back(motor_config[1]), right_motors.front(motor_config[2]), right_motors.back(motor_config[3]) {
+
+            set_motion_direction("forward");
         
         }
 
-        void set_motion_direction(string ){
+        void set_motion_direction(string direction){
+            
+            if (direction =="forward"){
 
-        }
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.forward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.forward, right_motors.back);
+             
+
+            } else if(direction == "backward"){
+
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.front);
+                left_motors.motor_driver.set_direction(left_motors.backward, left_motors.back);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.front);
+                right_motors.motor_driver.set_direction(right_motors.backward, right_motors.back);
+            
+
+            } else{}
+            
+        void set_speed_all(uint speed = 50){
+
+            left_motors.motor_driver.set_speed(speed, left_motors.front);
+            left_motors.motor_driver.set_speed(speed, left_motors.back);
+            right_motors.motor_driver.set_speed(speed, right_motors.front);
+            right_motors.motor_driver.set_speed(speed, right_motors.back);
+
+        }        
+
+        // }
+
+        // string ping_status(){
+
+        // }
     
     private:
+    // TB6612FNG_MD left_motors, right_motors;
+    motors left_motors, right_motors;
+    left_motors.forward = "ccw";
+    left_motors.backward = "cw";
+    right_motors.forward = "cw";
+    right_motors.backward = "ccw";
 
-    TB6612FNG_MD left_motors, right_motors;
-    string name;
-    
+    string name, status;
+    // const bool left_front, left_back, right_front, right_back;
+    // const string left_forward = "ccw", left_backword = "cw";
+    // const string right_forward = "cw"; right_backword = "ccw";
 
 };
 
@@ -109,73 +159,87 @@ int main(){
     Front Right(motores_right==true) 
     Back Right(motores_right==false)
     */
-    TB6612FNG_MD motors_left(0,1,2,6,5,4,3);
-    TB6612FNG_MD motors_right(20,21,22,19,26,27,28);
+    TB6612FNG_MD right_md(0,1,2,6,5,4,3);
+    TB6612FNG_MD left_md(20,21,22,19,26,27,28);
+
+    Rover robot(left_md, right_md, "test_robot");
+
+
 
     while (true){
 
-        motors_left.set_direction("cw", true);
-        motors_left.set_direction("cw", false);
-        motors_right.set_direction("cw", true);
-        motors_right.set_direction("cw", false);
-
-        motors_left.set_speed(50,true);
-        motors_left.set_speed(50,false);
-        motors_right.set_speed(50,true);
-        motors_right.set_speed(50,false);
-
-
+        robot.set_motion_direction("forward");
+        robot.set_speed(50);
         sleep_ms(5000);
 
-        motors_left.set_direction("short_brake", true);
-        motors_left.set_direction("short_brake", false);
-        motors_right.set_direction("short_brake", true);
-        motors_right.set_direction("short_brake", false);
-
+        robot.set_motion_direction("backward");
+        robot.set_speed(50);
         sleep_ms(5000);
 
-        motors_left.set_direction("ccw", true);
-        motors_left.set_direction("ccw", false);
-        motors_right.set_direction("ccw", true);
-        motors_right.set_direction("ccw", false);
-
-        motors_left.set_speed(40, true);
-        motors_left.set_speed(40, false);
-        motors_right.set_speed(40, true);
-        motors_right.set_speed(40, false);
 
 
-        sleep_ms(5000);
+        // motors_left.set_direction("cw", true);
+        // motors_left.set_direction("cw", false);
+        // motors_right.set_direction("cw", true);
+        // motors_right.set_direction("cw", false);
 
-        motors_left.set_direction("stop", true);
-        motors_left.set_direction("stop", false);
-        motors_right.set_direction("stop", true);
-        motors_right.set_direction("stop", false);
+        // motors_left.set_speed(50,true);
+        // motors_left.set_speed(50,false);
+        // motors_right.set_speed(50,true);
+        // motors_right.set_speed(50,false);
 
-        sleep_ms(5000);
 
-        motors_left.set_direction("ccw", true);
-        motors_left.set_direction("ccw", false);
-        motors_right.set_direction("ccw", true);
-        motors_right.set_direction("ccw", false);
+        // sleep_ms(5000);
 
-        motors_left.set_speed(100, true);
-        motors_left.set_speed(100, false);
-        motors_right.set_speed(100, true);
-        motors_right.set_speed(100, false);
+        // motors_left.set_direction("short_brake", true);
+        // motors_left.set_direction("short_brake", false);
+        // motors_right.set_direction("short_brake", true);
+        // motors_right.set_direction("short_brake", false);
 
-        sleep_ms(5000);
+        // sleep_ms(5000);
 
-        motors_left.set_direction("cw", true);
-        motors_left.set_direction("cw", false);
-        motors_right.set_direction("cw", true);
-        motors_right.set_direction("cw", false);
+        // motors_left.set_direction("ccw", true);
+        // motors_left.set_direction("ccw", false);
+        // motors_right.set_direction("ccw", true);
+        // motors_right.set_direction("ccw", false);
 
-        motors_left.set_speed(100,true);
-        motors_left.set_speed(100,false);
-        motors_right.set_speed(100,true);
-        motors_right.set_speed(100,false);
+        // motors_left.set_speed(40, true);
+        // motors_left.set_speed(40, false);
+        // motors_right.set_speed(40, true);
+        // motors_right.set_speed(40, false);
 
-        sleep_ms(5000);
+
+        // sleep_ms(5000);
+
+        // motors_left.set_direction("stop", true);
+        // motors_left.set_direction("stop", false);
+        // motors_right.set_direction("stop", true);
+        // motors_right.set_direction("stop", false);
+
+        // sleep_ms(5000);
+
+        // motors_left.set_direction("ccw", true);
+        // motors_left.set_direction("ccw", false);
+        // motors_right.set_direction("ccw", true);
+        // motors_right.set_direction("ccw", false);
+
+        // motors_left.set_speed(100, true);
+        // motors_left.set_speed(100, false);
+        // motors_right.set_speed(100, true);
+        // motors_right.set_speed(100, false);
+
+        // sleep_ms(5000);
+
+        // motors_left.set_direction("cw", true);
+        // motors_left.set_direction("cw", false);
+        // motors_right.set_direction("cw", true);
+        // motors_right.set_direction("cw", false);
+
+        // motors_left.set_speed(100,true);
+        // motors_left.set_speed(100,false);
+        // motors_right.set_speed(100,true);
+        // motors_right.set_speed(100,false);
+
+        // sleep_ms(5000);
     }
 };
